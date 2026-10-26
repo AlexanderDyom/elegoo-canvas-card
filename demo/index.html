@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elegoo cards demo</title>
+<!-- @font-face must be declared at document level to be usable inside shadow roots -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<style>
+  body { margin: 0; padding: 24px; background: #111; color: #e1e1e1; font-family: Roboto, "Segoe UI", sans-serif;
+         --primary-text-color: #e1e1e1; --secondary-text-color: #9b9b9b; --card-background-color: #1c1c1c;
+         --primary-color: #03a9f4; --divider-color: rgba(225,225,225,.12); --secondary-background-color: #282828; }
+  body.light { background: #f0f0f0; color: #212121; --primary-text-color: #212121; --secondary-text-color: #727272;
+         --card-background-color: #fff; --divider-color: rgba(0,0,0,.12); --secondary-background-color: #f2f2f2; }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .bar button { background: #333; color: #fff; border: 0; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; align-items: start; }
+  .wide { grid-column: 1 / -1; max-width: 720px; }
+  #log { font: 12px monospace; color: #8a8a8a; margin-top: 16px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <button data-s="printing">Печать</button>
+  <button data-s="paused">Пауза</button>
+  <button data-s="idle">Ожидание</button>
+  <button data-s="complete">Завершено</button>
+  <button data-s="error">Ошибка</button>
+  <button id="empty">Пустой слот A3</button>
+  <button id="theme">Светлая/тёмная</button>
+</div>
+<div class="grid">
+  <elegoo-canvas-card id="c1"></elegoo-canvas-card>
+  <elegoo-printer-card id="c2"></elegoo-printer-card>
+  <elegoo-combo-card id="c3" class="wide"></elegoo-combo-card>
+</div>
+<div id="log"></div>
+
+<script>
+  // Minimal stand-ins for HA's ha-card / ha-icon.
+  customElements.define("ha-card", class extends HTMLElement {
+    connectedCallback() {
+      Object.assign(this.style, { display: "block", background: "var(--card-background-color)", borderRadius: "12px",
+        border: "1px solid var(--divider-color)", color: "var(--primary-text-color)" });
+    }
+  });
+  customElements.define("ha-icon", class extends HTMLElement {
+    static get observedAttributes() { return ["icon"]; }
+    constructor() { super(); this.attachShadow({ mode: "open" }); }
+    attributeChangedCallback() { this.render(); }
+    connectedCallback() { this.render(); }
+    render() {
+      const name = (this.getAttribute("icon") || "").replace("mdi:", "");
+      this.shadowRoot.innerHTML = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+        <i class="mdi mdi-${name}" style="font-size:var(--mdc-icon-size,24px);line-height:1;display:inline-flex"></i>`;
+      this.style.display = "inline-flex";
+    }
+  });
+</script>
+<script src="../dist/elegoo-canvas-card.js"></script>
+<script>
+  // Demo only: no HA camera proxy here, so feed the "camera" from a local animated SVG.
+  const camDemo = "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120"><rect width="160" height="120" fill="#2b2f33"/>' +
+    '<rect y="92" width="160" height="28" fill="#3a3a3a"/><path d="M58 92h44l-4-14H90l-3-16H73l-3 16H62z" fill="#3fc1e8"/>' +
+    '<rect x="70" y="10" width="20" height="14" fill="#888"><animate attributeName="x" values="40;100;40" dur="3s" repeatCount="indefinite"/></rect>' +
+    '<text x="6" y="114" font-size="8" fill="#aaa" font-family="monospace">CHAMBER CAM</text></svg>');
+  for (const tag of ["elegoo-printer-card", "elegoo-combo-card"]) {
+    const proto = Object.getPrototypeOf(customElements.get(tag).prototype);
+    const orig = proto._mediaSources;
+    proto._mediaSources = function () { const r = orig.call(this); return r.camSrc ? { ...r, camSrc: camDemo } : r; };
+  }
+  const P = "centauri_carbon_2";
+  const DEV = "dev1";
+  const svgThumb = "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 90"><rect width="120" height="90" fill="#202020"/>' +
+    '<path d="M30 70h60l-6-18H70l-4-22H50l-4 22H36z" fill="#3fc1e8"/></svg>');
+  const S = {};
+  const set = (id, state, attributes = {}) => (S[id] = { entity_id: id, state: String(state), attributes, last_updated: Date.now() });
+
+  function build(status = "printing", emptyA3 = false) {
+    const printing = status === "printing" || status === "paused" || status === "error";
+    set(`sensor.${P}_print_status`, status);
+    set(`sensor.${P}_current_status`, printing ? "printing" : "idle");
+    set(`sensor.${P}_percent_complete`, status === "complete" ? 100 : 47, { unit_of_measurement: "%" });
+    set(`sensor.${P}_remaining_print_time`, printing ? 83 : 0, { unit_of_measurement: "min" });
+    set(`sensor.${P}_current_layer`, 142); set(`sensor.${P}_total_layers`, 302);
+    set(`sensor.${P}_current_z`, 28.4, { unit_of_measurement: "mm" });
+    set(`sensor.${P}_file_name`, "benchy_0.2mm_PETG_CC2.gcode");
+    set(`sensor.${P}_nozzle_temperature`, printing ? 218.3 : 27, { unit_of_measurement: "°C" });
+    set(`sensor.${P}_bed_temperature`, printing ? 60 : 25, { unit_of_measurement: "°C" });
+    set(`sensor.${P}_box_temp`, 34, { unit_of_measurement: "°C" });
+    set(`number.${P}_target_nozzle_temp`, printing ? 220 : 0);
+    set(`number.${P}_target_bed_temp`, printing ? 60 : 0);
+    set(`light.${P}_chamber_light`, "on");
+    set(`fan.${P}_model_fan`, printing ? "on" : "off", { percentage: 80 });
+    set(`button.${P}_pause_print`, "unknown"); set(`button.${P}_resume_print`, "unknown"); set(`button.${P}_stop_print`, "unknown");
+    set(`select.${P}_print_tray`, "Automatic", { options: ["Automatic", "A1", "A2", "A3", "A4"] });
+    set(`sensor.${P}_active_tray_id`, printing ? "0" : "unknown");
+    set(`binary_sensor.${P}_canvas_connected`, "on");
+    set(`camera.${P}_chamber_camera`, "streaming", { access_token: "demo" });
+    set(`image.${P}_cover_image`, "2026-10-17", { entity_picture: svgThumb });
+    const slots = [
+      ["#3FC1E8", "PETG", "Elegoo", "Rapid PETG Blue", 12.4],
+      ["#F5F5F5", "PLA", "Elegoo", "PLA White", 0],
+      ["#F7C46C", "PLA", "Elegoo", "PLA Matte Gold", 3.1],
+      ["#111111", "PLA", "Elegoo", "PLA Black", 0],
+    ];
+    slots.forEach(([c, t, b, n, g], i) => {
+      const k = i + 1;
+      const empty = emptyA3 && k === 3;
+      set(`sensor.${P}_a${k}_color`, empty ? "unknown" : c);
+      set(`sensor.${P}_a${k}_name`, empty ? "unknown" : n);
+      set(`sensor.${P}_a${k}_attributes`, empty ? "unknown" : t, empty ? {} : { brand: b, diameter: 1.75 });
+      set(`sensor.${P}_a${k}_grams`, g || "unknown", { unit_of_measurement: "g" });
+    });
+  }
+
+  const log = (m) => (document.getElementById("log").textContent = m + "\n" + document.getElementById("log").textContent);
+  const LANG = new URLSearchParams(location.search).get("lang") || "ru"; // ?lang=en
+  let entities = {};
+  const hass = () => ({
+    states: { ...S }, entities, language: LANG, locale: { language: LANG },
+    devices: { [DEV]: { id: DEV, name: "Centauri Carbon 2", model: "CC2" } },
+    callService: (d, s, data) => log(`callService ${d}.${s} ${JSON.stringify(data)}`),
+  });
+  let status = "printing", emptyA3 = false;
+  function push() {
+    build(status, emptyA3);
+    entities = Object.fromEntries(Object.keys(S).map((id) => [id, { entity_id: id, device_id: DEV, platform: "elegoo_printer" }]));
+    const h = hass();
+    ["c1", "c2", "c3"].forEach((id) => (document.getElementById(id).hass = h));
+  }
+  document.getElementById("c1").setConfig({});
+  document.getElementById("c2").setConfig({});
+  document.getElementById("c3").setConfig({});
+  push();
+  document.querySelectorAll("[data-s]").forEach((b) => b.addEventListener("click", () => { status = b.dataset.s; push(); }));
+  document.getElementById("empty").addEventListener("click", () => { emptyA3 = !emptyA3; push(); });
+  document.getElementById("theme").addEventListener("click", () => document.body.classList.toggle("light"));
+  document.addEventListener("hass-more-info", (e) => log(`more-info ${e.detail.entityId}`));
+
+  // ?shot=canvas|printer|combo|camera — show a single card, used for README screenshots.
+  const shot = new URLSearchParams(location.search).get("shot");
+  if (shot) {
+    const keep = { canvas: "c1", printer: "c2", camera: "c2", combo: "c3" }[shot];
+    document.querySelector(".bar").remove();
+    document.getElementById("log").remove();
+    document.body.style.padding = "16px";
+    const grid = document.querySelector(".grid");
+    grid.style.display = "block";
+    grid.style.width = shot === "combo" ? "640px" : "360px";
+    ["c1", "c2", "c3"].filter((id) => id !== keep).forEach((id) => document.getElementById(id).remove());
+    if (shot === "camera") { const c = document.getElementById("c2"); c._view = "camera"; c._render(); }
+  }
+</script>
+</body>
+</html>
