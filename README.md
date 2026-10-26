@@ -2,7 +2,7 @@
 
 # 🧵 Elegoo Canvas Card
 
-**English** · [Русский](README.ru.md)
+**English** · [Русский](https://github.com/AlexanderDyom/elegoo-canvas-card/blob/main/README.ru.md)
 
 **Beautiful Home Assistant cards for Elegoo printers with the Canvas multi-material system**
 
@@ -11,12 +11,12 @@ Spools A1–A4 laid out exactly like on the printer, live camera, print progress
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?logo=homeassistantcommunitystore&logoColor=white)](https://hacs.xyz)
 [![GitHub Release](https://img.shields.io/github/v/release/AlexanderDyom/elegoo-canvas-card?label=release&color=03a9f4)](https://github.com/AlexanderDyom/elegoo-canvas-card/releases)
 [![Validate](https://img.shields.io/github/actions/workflow/status/AlexanderDyom/elegoo-canvas-card/validate.yml?label=HACS%20validation)](https://github.com/AlexanderDyom/elegoo-canvas-card/actions/workflows/validate.yml)
-[![License: MIT](https://img.shields.io/github/license/AlexanderDyom/elegoo-canvas-card?color=yellow)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://github.com/AlexanderDyom/elegoo-canvas-card/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/AlexanderDyom/elegoo-canvas-card?style=social)](https://github.com/AlexanderDyom/elegoo-canvas-card/stargazers)
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=AlexanderDyom&repository=elegoo-canvas-card&category=plugin)
 
-<img src="docs/images/combo.png" alt="Combined printer and Canvas card" width="640">
+<img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/combo.png" alt="Combined printer and Canvas card" width="640">
 
 </div>
 
@@ -39,12 +39,12 @@ Spools A1–A4 laid out exactly like on the printer, live camera, print progress
 
 | 🧵 Canvas | 🖨️ Printer | 📹 Camera |
 |:---:|:---:|:---:|
-| <img src="docs/images/canvas.png" width="260"> | <img src="docs/images/printer.png" width="260"> | <img src="docs/images/camera.png" width="260"> |
+| <img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/canvas.png" width="260"> | <img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/printer.png" width="260"> | <img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/camera.png" width="260"> |
 | `custom:elegoo-canvas-card` | `custom:elegoo-printer-card` | tap the preview |
 
 ### 🧩 Printer + Canvas — `custom:elegoo-combo-card`
 
-<img src="docs/images/combo.png" alt="Combined printer and Canvas card" width="640">
+<img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/combo.png" alt="Combined printer and Canvas card" width="640">
 
 ## 📋 Requirements
 
@@ -168,14 +168,6 @@ They only appear with the integration's G-code proxy enabled.
 
 **The card shows dashes.** Check that the Elegoo integration works and the printer is online, or set the entities manually (see above).
 
-## 🧪 Demo without Home Assistant
-
-```bash
-python -m http.server 8765
-```
-
-Then open http://localhost:8765/demo/?lang=en: the cards with sample data, with buttons to switch the printer status.
-
 ## 🙏 Credits
 
 - [danielcherubini/elegoo-homeassistant](https://github.com/danielcherubini/elegoo-homeassistant) — the integration this card is built on
@@ -185,4 +177,4 @@ This project is not affiliated with or endorsed by Elegoo.
 
 ## 📄 License
 
-[MIT](LICENSE)
+[MIT](https://github.com/AlexanderDyom/elegoo-canvas-card/blob/main/LICENSE)

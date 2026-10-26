@@ -2,7 +2,7 @@
 
 # 🧵 Elegoo Canvas Card
 
-[English](README.md) · **Русский**
+[English](https://github.com/AlexanderDyom/elegoo-canvas-card/blob/main/README.md) · **Русский**
 
 **Красивые карточки Home Assistant для принтеров Elegoo с системой Canvas**
 
@@ -11,12 +11,12 @@
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?logo=homeassistantcommunitystore&logoColor=white)](https://hacs.xyz)
 [![GitHub Release](https://img.shields.io/github/v/release/AlexanderDyom/elegoo-canvas-card?label=release&color=03a9f4)](https://github.com/AlexanderDyom/elegoo-canvas-card/releases)
 [![Validate](https://img.shields.io/github/actions/workflow/status/AlexanderDyom/elegoo-canvas-card/validate.yml?label=HACS%20validation)](https://github.com/AlexanderDyom/elegoo-canvas-card/actions/workflows/validate.yml)
-[![License: MIT](https://img.shields.io/github/license/AlexanderDyom/elegoo-canvas-card?color=yellow)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://github.com/AlexanderDyom/elegoo-canvas-card/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/AlexanderDyom/elegoo-canvas-card?style=social)](https://github.com/AlexanderDyom/elegoo-canvas-card/stargazers)
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=AlexanderDyom&repository=elegoo-canvas-card&category=plugin)
 
-<img src="docs/images/ru/combo.png" alt="Совмещённая карточка: принтер и Canvas" width="640">
+<img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/ru/combo.png" alt="Совмещённая карточка: принтер и Canvas" width="640">
 
 </div>
 
@@ -39,12 +39,12 @@
 
 | 🧵 Canvas | 🖨️ Принтер | 📹 Камера |
 |:---:|:---:|:---:|
-| <img src="docs/images/ru/canvas.png" width="260"> | <img src="docs/images/ru/printer.png" width="260"> | <img src="docs/images/ru/camera.png" width="260"> |
+| <img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/ru/canvas.png" width="260"> | <img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/ru/printer.png" width="260"> | <img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/ru/camera.png" width="260"> |
 | `custom:elegoo-canvas-card` | `custom:elegoo-printer-card` | нажатие на превью |
 
 ### 🧩 Принтер + Canvas — `custom:elegoo-combo-card`
 
-<img src="docs/images/ru/combo.png" alt="Совмещённая карточка: принтер и Canvas" width="640">
+<img src="https://raw.githubusercontent.com/AlexanderDyom/elegoo-canvas-card/main/docs/images/ru/combo.png" alt="Совмещённая карточка: принтер и Canvas" width="640">
 
 ## 📋 Что нужно
 
@@ -168,14 +168,6 @@ entities:
 
 **Карточка показывает прочерки.** Проверьте, что интеграция Elegoo работает и принтер в сети, или укажите сущности вручную (см. выше).
 
-## 🧪 Демо без Home Assistant
-
-```bash
-python -m http.server 8765
-```
-
-После запуска откройте http://localhost:8765/demo/: карточки на тестовых данных, статус можно переключать кнопками.
-
 ## 🙏 Благодарности
 
 - [danielcherubini/elegoo-homeassistant](https://github.com/danielcherubini/elegoo-homeassistant) — интеграция, без которой этой карточки бы не было
@@ -185,4 +177,4 @@ python -m http.server 8765
 
 ## 📄 Лицензия
 
-[MIT](LICENSE)
+[MIT](https://github.com/AlexanderDyom/elegoo-canvas-card/blob/main/LICENSE)
